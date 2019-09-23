@@ -12,7 +12,7 @@ import qs from 'qs'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/material.css'
 
-Vue.use(Vuetify, { theme: config.theme})
+Vue.use(Vuetify, {theme: config.theme})
 Vue.use(MyComponent)
 Vue.prototype.$qs = qs;
 
@@ -20,8 +20,8 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    router,
+    components: {App},
+    template: '<App/>'
 })
