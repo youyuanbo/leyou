@@ -97,10 +97,17 @@
                 handler() {
                     this.getDataFromServer();
                 }
+            },
+            delete: {
+                handler() {
+                    this.getDataFromServer();
+                }
             }
         },
         methods: {
+
             getDataFromServer() { // 从服务的加载数的方法。
+                this.loading = true;
                 // 发起请求
                 this.$http.get("/item/brand/page", {
                     params: {
@@ -138,6 +145,13 @@
                         // 回显商品分类
                         this.oldBrand.categories = data;
                     })
+            },
+            deleteBrand(oldBrand) {
+                this.$http.delete("/item/brand", {
+                    params: {
+                        bid: oldBrand.id,
+                    }
+                });
             },
             closeWindow() {
                 // 重新加载数据
