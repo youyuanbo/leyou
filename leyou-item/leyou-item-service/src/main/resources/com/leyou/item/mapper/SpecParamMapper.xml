@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, cid, group_id, name, numeric, unit, generic, searching, segments
+    id, cid, group_id, name, `numeric`, unit, generic, searching, segments
   </sql>
   <select id="selectByExample" parameterType="com.leyou.item.pojo.SpecParamExample" resultMap="BaseResultMap">
     select
@@ -127,7 +127,7 @@
         name,
       </if>
       <if test="numeric != null">
-        numeric,
+        `numeric`,
       </if>
       <if test="unit != null">
         unit,
@@ -241,7 +241,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="numeric != null">
-        numeric = #{numeric,jdbcType=BIT},
+        `numeric` = #{numeric,jdbcType=BIT},
       </if>
       <if test="unit != null">
         unit = #{unit,jdbcType=VARCHAR},
