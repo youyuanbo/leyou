@@ -127,7 +127,7 @@
         methods: {
             loadData() {
                 this.$http
-                    .get("/item/spec/params/" + this.group.id)
+                    .get("/item/spec/params?groupId=" + this.group.id)
                     .then(({data}) => {
                         data.forEach(p => {
                             p.segments = p.segments ? p.segments.split(",").map(s => s.split("-")) : [];

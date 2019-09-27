@@ -6,6 +6,7 @@ import com.leyou.item.pojo.SpecGroup;
 import com.leyou.item.pojo.SpecGroupExample;
 import com.leyou.item.pojo.SpecParam;
 import com.leyou.item.pojo.SpecParamExample;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,10 +52,25 @@ public class SpecificationService {
         int deleteByPrimaryKey = specGroupMapper.deleteByPrimaryKey(id);
     }
 
-    public List<SpecParam> querySpecParamByGroupId(Long groupId) {
+    //根据条件查询规格参数
+    public List<SpecParam> querySpecParamByGroupId(Long groupId, Long cid, Boolean generic, Boolean searching) {
         SpecParamExample specParamExample = new SpecParamExample();
         SpecParamExample.Criteria criteria = specParamExample.createCriteria();
-        criteria.andGroupIdEqualTo(groupId);
+        if (groupId != null) {
+            criteria.andGroupIdEqualTo(groupId);
+        }
+
+        if (cid != null) {
+            criteria.andCidEqualTo(cid);
+        }
+
+        if (generic != null) {
+            criteria.andGenericEqualTo(generic);
+        }
+
+        if (searching != null) {
+            criteria.andSearchingEqualTo(searching);
+        }
 
         return specParamMapper.selectByExample(specParamExample);
     }
@@ -93,5 +109,13 @@ public class SpecificationService {
     public void deleteSpecParam(Long id) {
         int deleteByPrimaryKey = specParamMapper.deleteByPrimaryKey(id);
         System.out.println("deleteByPrimaryKey = " + deleteByPrimaryKey);
+    }
+
+    // 根据分类ID查询规格参数
+    public List<SpecParam> querySpecParamByCid(Long cid) {
+        SpecParamExample specParamExample = new SpecParamExample();
+        specParamExample.createCriteria().andCidEqualTo(cid);
+
+        return specParamMapper.selectByExample(specParamExample);
     }
 }

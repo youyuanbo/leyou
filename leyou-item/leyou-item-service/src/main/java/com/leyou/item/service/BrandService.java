@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BrandService {
@@ -41,10 +42,8 @@ public class BrandService {
         BrandExample brandExample = new BrandExample();
 
         if (StringUtils.isNotBlank(key)) {
-            brandExample.or().andNameLike(key);
-            brandExample.or().andLetterLike(key.toUpperCase());
-            // brandExample.or(brandExample.createCriteria().andNameLike(key));
-            // brandExample.or(brandExample.createCriteria().andLetterLike(key.toUpperCase()));
+            brandExample.or().andNameLike("%" + key + "%");
+            brandExample.or().andLetterLike("%" + key.toUpperCase() + "%");
         }
 
         //排序
@@ -62,6 +61,7 @@ public class BrandService {
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getPageSize(), brandList);
     }
 
+    //新增品牌
     @Transactional
     public void saveBrand(Brand brand, List<Long> cids) {
         //向tb_brand表中插入一个品牌
@@ -122,5 +122,26 @@ public class BrandService {
         categoryBrandExample.createCriteria().andBrandIdEqualTo(bid);
 
         int deleteCategoryBrandResult = categoryBrandMapper.deleteByExample(categoryBrandExample);
+    }
+
+    public String queryBrandNameById(Long id) {
+        return brandMapper.selectByPrimaryKey(id).getName();
+    }
+
+    //根据分类ID查询品牌
+    public List<Brand> queryBrandByCid(Long cid) {
+        // 根据分类id，查询tb_category_brand表，获取品牌ID
+        CategoryBrandExample categoryBrandExample = new CategoryBrandExample();
+        CategoryBrandExample.Criteria categoryBrandExampleCriteria = categoryBrandExample.createCriteria();
+        categoryBrandExampleCriteria.andCategoryIdEqualTo(cid);
+        List<Long> brandIdList = categoryBrandMapper.selectByExample(categoryBrandExample)
+                .stream().map(CategoryBrandKey::getBrandId)
+                .collect(Collectors.toList());
+        // 根据品牌Id列表，查询品牌
+        BrandExample brandExample = new BrandExample();
+        BrandExample.Criteria brandExampleCriteria = brandExample.createCriteria();
+        brandExampleCriteria.andIdIn(brandIdList);
+
+        return brandMapper.selectByExample(brandExample);
     }
 }
