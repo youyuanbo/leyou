@@ -115,7 +115,7 @@
       #{saleable,jdbcType=BIT}, #{valid,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{lastUpdateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.leyou.item.pojo.Spu">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.leyou.item.pojo.Spu">
     insert into tb_spu
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

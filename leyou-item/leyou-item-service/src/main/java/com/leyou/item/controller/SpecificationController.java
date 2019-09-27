@@ -46,9 +46,14 @@ public class SpecificationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping(path = "params/{groupId}")
-    public ResponseEntity<List<SpecParam>> querySpecParamsByGroupId(@PathVariable("groupId") Long groupId) {
-        List<SpecParam> specParamList = specificationService.querySpecParamByGroupId(groupId);
+    @GetMapping(path = "params")
+    public ResponseEntity<List<SpecParam>> querySpecParamsByGroupId(
+            @RequestParam(value = "groupId", required = false) Long groupId,
+            @RequestParam(value = "cid", required = false) Long cid,
+            @RequestParam(value = "generic", required = false) Boolean generic,
+            @RequestParam(value = "searching", required = false) Boolean searching
+    ) {
+        List<SpecParam> specParamList = specificationService.querySpecParamByGroupId(groupId, cid, generic, searching);
         return ResponseEntity.ok(specParamList);
     }
 
@@ -90,4 +95,5 @@ public class SpecificationController {
         specificationService.deleteSpecParam(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

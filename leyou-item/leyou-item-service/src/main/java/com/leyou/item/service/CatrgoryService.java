@@ -52,4 +52,12 @@ public class CatrgoryService {
         //根据categoryId查询tb_category表，提取查询结果中的categoryName
         return categoryMapper.selectByExample(categoryExample).stream().map(Category::getName).collect(Collectors.toList());
     }
+
+    public List<String> queryNameByIds(List<Long> ids) {
+        CategoryExample categoryExample = new CategoryExample();
+        CategoryExample.Criteria criteria = categoryExample.createCriteria();
+        criteria.andIdIn(ids);
+
+        return categoryMapper.selectByExample(categoryExample).stream().map(Category::getName).collect(Collectors.toList());
+}
 }
