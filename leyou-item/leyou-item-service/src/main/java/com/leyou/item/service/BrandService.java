@@ -128,6 +128,10 @@ public class BrandService {
         return brandMapper.selectByPrimaryKey(id).getName();
     }
 
+    public Brand queryBrandById(Long id) {
+        return brandMapper.selectByPrimaryKey(id);
+    }
+
     //根据分类ID查询品牌
     public List<Brand> queryBrandByCid(Long cid) {
         // 根据分类id，查询tb_category_brand表，获取品牌ID
@@ -143,5 +147,20 @@ public class BrandService {
         brandExampleCriteria.andIdIn(brandIdList);
 
         return brandMapper.selectByExample(brandExample);
+    }
+
+    public List<Brand> queryBrandListByBidList(List<Long> brandIdList) {
+
+        BrandExample brandExample = new BrandExample();
+        BrandExample.Criteria criteria = brandExample.createCriteria();
+        criteria.andIdIn(brandIdList);
+
+        List<Brand> brandList = brandMapper.selectByExample(brandExample);
+
+        if (CollectionUtils.isEmpty(brandList)) {
+            throw new LeYouException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+
+        return brandList;
     }
 }

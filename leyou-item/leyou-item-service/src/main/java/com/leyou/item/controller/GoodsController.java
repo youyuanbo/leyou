@@ -3,6 +3,7 @@ package com.leyou.item.controller;
 import com.leyou.bo.SpuBo;
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Sku;
+import com.leyou.item.pojo.Spu;
 import com.leyou.item.pojo.SpuDetail;
 import com.leyou.item.service.GoodsService;
 import com.leyou.vo.SpuVo;
@@ -21,7 +22,7 @@ public class GoodsController {
     private GoodsService goodsService;
 
     //查询商品
-    @GetMapping(path = "/spu/page")
+    @GetMapping(path = "spu/page")
     public ResponseEntity<PageResult<SpuVo>> querySpuByPage(
             @RequestParam(value = "key", required = false) String key,
             @RequestParam(value = "saleable", required = false) Boolean saleable,
@@ -61,6 +62,11 @@ public class GoodsController {
     public ResponseEntity<Void> deleteGoods(@PathVariable Long spuId) {
         goodsService.deleteGoods(spuId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("spu/{spuId}")
+    public ResponseEntity<Spu> querySpuById(@PathVariable Long spuId) {
+        return ResponseEntity.ok(goodsService.querySpuIdBySpuId(spuId));
     }
 
 }

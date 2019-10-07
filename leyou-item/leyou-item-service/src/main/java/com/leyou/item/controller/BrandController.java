@@ -6,6 +6,7 @@ import com.leyou.item.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +53,19 @@ public class BrandController {
         return ResponseEntity.ok(brandService.queryBrandByCid(cid));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Brand> queryBrandById(@PathVariable Long id) {
+        return ResponseEntity.ok(brandService.queryBrandById(id));
+    }
+
+    @GetMapping("/brandList")
+    public ResponseEntity<List<Brand>> queryBrandListByBidList(@RequestParam List<Long> brandIdList) {
+        List<Brand> brandList = brandService.queryBrandListByBidList(brandIdList);
+        if (CollectionUtils.isEmpty(brandIdList)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(brandList);
+    }
 
 }

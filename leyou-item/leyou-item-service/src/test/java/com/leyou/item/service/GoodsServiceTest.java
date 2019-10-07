@@ -26,4 +26,31 @@ public class GoodsServiceTest {
     //     System.out.println(spuVoList.size());
     //     spuVoList.forEach(System.out::println);
     }
+
+    @Test
+    public void saveGoods() {
+    }
+
+    @Test
+    public void saveSkuAndStock() {
+    }
+
+    @Test
+    public void querySpuDetailBySpuId() {
+    }
+
+    @Test
+    public void querySkuListBySpuId() {
+    }
+
+    @Test
+    public void updateGoods() {
+    }
+
+    @Test
+    public void deleteGoods() {
+        // goodsService.deleteGoods(201L);
+        // goodsService.deleteGoods(202L);
+        // goodsService.deleteGoods(204L);
+    }
 }
