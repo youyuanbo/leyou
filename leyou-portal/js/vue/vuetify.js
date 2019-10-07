@@ -6298,7 +6298,7 @@
  *     mixins: [breakpoint],
  *     ...
  *
- * Then inside a template:
+ * Then inside a templates:
  *
  *   <div v-if="$breakpoint.smAndDown">...</div>
  */
