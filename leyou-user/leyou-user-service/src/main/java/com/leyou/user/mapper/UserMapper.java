@@ -1,8 +1,10 @@
-package com.leyou.item.mapper;
+package com.leyou.user.mapper;
 
-import com.leyou.item.pojo.User;
-import com.leyou.item.pojo.UserExample;
+
 import java.util.List;
+
+import com.leyou.user.pojo.User;
+import com.leyou.user.pojo.UserExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {

@@ -1,4 +1,4 @@
-package com.leyou.item.pojo;
+package com.leyou.user.pojo;
 
 import java.util.ArrayList;
 import java.util.Date;
