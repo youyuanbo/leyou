@@ -4,6 +4,7 @@ package com.leyou.filter;
 import com.leyou.auth.entity.UserInfo;
 import com.leyou.auth.utils.JwtUtils;
 import com.leyou.common.utils.CookieUtils;
+import com.leyou.config.FilterProperties;
 import com.leyou.config.JWTProperties;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -22,6 +23,9 @@ public class LoginFilter extends ZuulFilter {
 
     @Autowired
     private JWTProperties jwtProperties;
+
+    @Autowired
+    private FilterProperties filterProperties;
 
     /**
      * 指定过滤器类型
@@ -53,6 +57,21 @@ public class LoginFilter extends ZuulFilter {
      */
     @Override
     public boolean shouldFilter() {
+
+        // 获取上下文
+        RequestContext context = RequestContext.getCurrentContext();
+        // 获取request
+        HttpServletRequest request = context.getRequest();
+        // 获取请求路径
+        String uri = request.getRequestURI();
+        // 判断是否需要放行，如果需要放行，返回false
+        // 拦截返回true
+        for (String allowPath : filterProperties.getAllowPaths()) {
+            // 如果uri以allowPath开头，则放行此请求
+            if (uri.startsWith(allowPath)){
+                return false;
+            }
+        }
         return true;
     }
 
@@ -81,7 +100,6 @@ public class LoginFilter extends ZuulFilter {
             // 返回状态码
             context.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
         }
-
         return null;
     }
 }
