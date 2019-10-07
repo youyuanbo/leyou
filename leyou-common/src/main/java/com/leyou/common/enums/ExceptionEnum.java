@@ -32,6 +32,18 @@ public enum ExceptionEnum {
     SPEC_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "商品规格组没找到"),
     SPEC_PARAM_NOT_FOUNT(HttpStatus.NOT_FOUND.value(), "商品规格参数不存在"),
 
+    SPU_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Spu为找到"),
+
+    PARAM_IS_NOT_RIGHT(HttpStatus.BAD_REQUEST.value(), "参数有误"),
+
+    INVALID_VERIFY_CODE(HttpStatus.BAD_REQUEST.value(), "验证码无效"),
+
+    USERNAME_OR_PASSWORD_INVALID(HttpStatus.BAD_REQUEST.value(), "用户名或密码错误"),
+
+    CREATE_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "用户凭证生成失败"),
+
+    UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "未授权"),
+
     ;
 
     private Integer code;
