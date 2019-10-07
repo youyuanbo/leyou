@@ -10,7 +10,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @SuppressWarnings("ALL")
@@ -22,11 +25,40 @@ public class SpecificationService {
     @Autowired
     private SpecParamMapper specParamMapper;
 
+    // 根据分类Id查询规格组
     public List<SpecGroup> querySpecGroupByCategoryId(Long categoryId) {
         SpecGroupExample specGroupExample = new SpecGroupExample();
         specGroupExample.createCriteria().andCidEqualTo(categoryId);
 
         return specGroupMapper.selectByExample(specGroupExample);
+    }
+
+    // 根据分类ID查询规格组及规格组对应的参数
+    public List<SpecGroup> querySpecGroupAndSpecParamByCategoryId(Long categoryId) {
+        //封装查询条件，根据分类Id，查询规格组
+        SpecGroupExample specGroupExample = new SpecGroupExample();
+        SpecGroupExample.Criteria criteria = specGroupExample.createCriteria();
+        criteria.andCidEqualTo(categoryId);
+        List<SpecGroup> specGroupList = specGroupMapper.selectByExample(specGroupExample);
+
+        // 根据分类Id，查询所有的规格参数
+        List<SpecParam> specParamList = querySpecParamByCid(categoryId);
+
+        // 将所有的规格参数，转换到map中，map的key是规格参数组id，value是规则参数
+        Map<Long, List<SpecParam>> specParamMap = new HashMap<>();
+        specParamList.forEach(specParam -> {
+            // 如果map中还不存在当前规则参数，则添加一个arrayList
+            if (!specParamMap.containsKey(specParam.getGroupId())) {
+                specParamMap.put(specParam.getGroupId(), new ArrayList<>());
+            }
+            // 如果已经存在，则把规格参数添加到map中
+            specParamMap.get(specParam.getGroupId()).add(specParam);
+        });
+
+        // 将规格参数添加到规格参数组中
+        specGroupList.forEach(specGroup -> specGroup.setSpecParamList(specParamMap.get(specGroup.getId())));
+        // 返回规格参数组
+        return specGroupList;
     }
 
     public void updateSpecGroup(SpecGroup specGroup) {
@@ -75,6 +107,7 @@ public class SpecificationService {
         return specParamMapper.selectByExample(specParamExample);
     }
 
+    //新增规格参数
     public void addSpecParam(Long cid, Long groupId, String name, Boolean numeric, String unit, Boolean generic, Boolean searching, String segments) {
 
         SpecParam specParam = new SpecParam();
@@ -90,6 +123,7 @@ public class SpecificationService {
         int insertSelective = specParamMapper.insertSelective(specParam);
     }
 
+    // 更新规格参数
     public void updateSpecParam(Long id, Long cid, Long groupId, String name, Boolean numeric, String unit, Boolean generic, Boolean searching, String segments) {
 
         SpecParam specParam = new SpecParam();
@@ -106,9 +140,9 @@ public class SpecificationService {
         int updateByPrimaryKeySelective = specParamMapper.updateByPrimaryKeySelective(specParam);
     }
 
+    //根据规格参数Id，删除规格参数
     public void deleteSpecParam(Long id) {
         int deleteByPrimaryKey = specParamMapper.deleteByPrimaryKey(id);
-        System.out.println("deleteByPrimaryKey = " + deleteByPrimaryKey);
     }
 
     // 根据分类ID查询规格参数

@@ -11,6 +11,7 @@ import com.leyou.item.mapper.StockMapper;
 import com.leyou.item.pojo.*;
 import com.leyou.vo.SpuVo;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,9 @@ public class GoodsService {
     @Autowired
     private SpuService spuService;
 
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
     // 查询商品
     public PageResult<SpuVo> querySpuByPage(String key, Boolean saleable, Integer page, Integer rows) {
 
@@ -79,7 +83,7 @@ public class GoodsService {
             SpuVo spuVo = new SpuVo();
             BeanUtils.copyProperties(spu, spuVo);
 
-            List<String> nameList = catrgoryService.queryNameByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3()));
+            List<String> nameList = catrgoryService.queryCategoryNameByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3()));
             spuVo.setCname(StringUtils.join(nameList, "/"));
 
             spuVo.setBname(brandService.queryBrandNameById(spu.getBrandId()));
@@ -107,6 +111,8 @@ public class GoodsService {
         spuDetailMapper.insertSelective(spuDetail);
 
         saveSkuAndStock(spuBo);
+        // 发送mq消息
+        amqpTemplate.convertAndSend("item.insert", spuBo.getId());
 
     }
 
@@ -174,6 +180,8 @@ public class GoodsService {
         spuMapper.updateByPrimaryKeySelective(spuBo);
         //更新spuDetail
         spuDetailMapper.updateByPrimaryKeySelective(spuBo.getSpuDetail());
+        // 发送mq消息
+        amqpTemplate.convertAndSend("item.updata", spuBo.getId());
     }
 
     // 删除商品
@@ -194,6 +202,19 @@ public class GoodsService {
         spuDetailService.deleteSpuDetailBySpuId(spuId);
         // 根据spuId删除Spu
         spuService.deleteSpuById(spuId);
+        // 发送mq消息
+        amqpTemplate.convertAndSend("item.delete", spuId);
+    }
 
+    // 根据spuId查询Spu
+    public Spu querySpuIdBySpuId(Long spuId) {
+        // 查询spu
+        Spu spu = spuService.querySpuBySpuId(spuId);
+
+        spu.setSkuList(querySkuListBySpuId(spuId));
+
+        spu.setSpuDetail(querySpuDetailBySpuId(spuId));
+
+        return spu;
     }
 }

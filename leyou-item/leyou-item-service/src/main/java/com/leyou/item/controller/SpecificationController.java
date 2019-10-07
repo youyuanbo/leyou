@@ -96,4 +96,11 @@ public class SpecificationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping(path = "/group")
+    public ResponseEntity<List<SpecGroup>> querySpecGroupAndSpecParamByCategoryId(@RequestParam Long cid) {
+        return ResponseEntity.ok(specificationService.querySpecGroupAndSpecParamByCategoryId(cid));
+    }
+
+
+
 }
