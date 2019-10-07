@@ -15,6 +15,10 @@
         <module>leyou-upload</module>
         <module>leyou-upload</module>
         <module>leyou-search</module>
+        <module>leyou-page</module>
+        <module>leyou-message</module>
+        <module>leyou-user</module>
+        <module>leyou-auth</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -95,6 +99,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 
